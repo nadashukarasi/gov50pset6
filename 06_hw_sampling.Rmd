@@ -76,8 +76,8 @@ In the write-up, state how many units are in the population (that is, how many r
 
 ```{r}
 library(tidyverse)
-durham <- read_csv('durham.csv')
-vote_history <- read_csv('vote_history.csv')
+durham <- read_csv('data/durham.csv')
+vote_history <- read_csv('data/vote_history.csv')
 durham <- left_join(durham, vote_history, by = "ncid")
 durham <- durham |>
   mutate(vote_gen_2020 = ifelse(is.na(vote_method_2020),0,1))
