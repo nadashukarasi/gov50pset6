@@ -76,7 +76,7 @@ In the write-up, state how many units are in the population (that is, how many r
 
 ```{r}
 library(tidyverse)
-durham <- read_csv('data/durham.csv')
+durham <- read_csv('data/durham.csv', show_col_types = FALSE)
 vote_history <- read_csv('data/vote_history.csv')
 durham <- left_join(durham, vote_history, by = "ncid")
 durham <- durham |>
@@ -86,7 +86,7 @@ prop_voted <- mean(durham$vote_gen_2020)
 num_units
 prop_voted
 ```
-
+There are 231747 rows, meaning 231747 units in the population. The turnout proportion is 0.7228702. 
 
 \newpage
 
@@ -107,7 +107,6 @@ turnout_hist <- ggplot(dat = durham, mapping = aes(x = vote_gen_2020)) +
   geom_bar(aes(y = after_stat(prop)), binwidth = 1)
 turnout_hist
 ```
-
 
 
 \newpage
@@ -166,8 +165,7 @@ In the write-up, compare the sampling distribution of the sample mean and sample
 
 ## Answer 4
 
-```{r eval=FALSE}
-install.packages("infer")
+```{r}
 library(infer)
 set.seed(02138)
 samples_n200 <- durham |>
@@ -183,7 +181,7 @@ turnout_prop_hist <- ggplot(samples_n200, mapping = aes(x = turnout_prop)) +
 turnout_prop_hist
 ```
 
-
+There are both similarities and differences between histograms fro q2 and from this question. As we can see in this histogram, we have an evenly distributed histogram at around 46 years old and it is skewed right. However, the age mean is almost the same at 46. Meanwhile, the turnout prop histogram shows a concentration of turnout between .7 and .75 . The biggest difference however, sees to be in the standart deviation, with it being around 19 for the mean age. The sampling distributions of means are around the same value as the population mean, but standard deviation changes due to sampling variability. 
 
 \newpage
 
@@ -216,6 +214,9 @@ samp_dist_summary <- samples_n200 |>
   )
 kable(samp_dist_summary, digits = 2)
 ```
+
+The most significant contrast lies in the dataset's variability. For instance, the data in this graph illustrates a standard deviation of 1.34 and an average age of 45.99. The standard deviation for the proportion of individuals turning out to vote is 0.03, with an average turnout proportion of 0.72. These statistics align with my visual assessment of the previous graphs. As previously emphasized, the standard deviation for age in the entire population is 19.0, while the average mean age of the total population is 46. The standard deviation in the original voter turnout proportion is 0.45, and the average turnout proportion is 0.72. The means were consistent, but the standard deviations were not.
+
 
 
 
@@ -251,7 +252,7 @@ young_turnout_prop_hist <- ggplot(young_samples_n200, aes(x = turnout_prop)) +
   labs(x = "turnout prop.", y = "density") + theme_minimal()
 young_turnout_prop_hist
 ```
-
+Bias is present in this new distribution, primarily due to two key factors.If researchers were to solely rely on this sample distribution to model the overall population, it would result in inaccuracies due to the following reasons because this sample exhibits an estimated difference of approximately 0.10 in turnout proportion compared to the broader population, and because the variation within this sample does not accurately represent the voting behaviors of the entire population. This underscores the fact that relying solely on the proportions of voters under 30 would yield a biased perspective of the voting patterns within the overall population.
 
 
 \newpage
