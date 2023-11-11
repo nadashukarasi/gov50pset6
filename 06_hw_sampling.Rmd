@@ -98,6 +98,15 @@ Create a density histogram of age with a bin width of 1 and save this plot as `a
  **Rubric:** 2pts for `age_hist` (autograder); 2pts for `turnout_hist` (autograder). 
 
 ## Answer 2
+```{r}
+library(ggplot2)
+age_hist <- ggplot(durham, aes(x = age)) +
+  geom_histogram(aes(y = after_stat(density)), binwidth = 1)
+age_hist
+turnout_hist <- ggplot(dat = durham, mapping = aes(x = vote_gen_2020)) +
+  geom_bar(aes(y = after_stat(prop)), binwidth = 1)
+turnout_hist
+```
 
 
 
@@ -119,6 +128,17 @@ Make sure that the column names are the same for the autograder. (**Hint:** you 
  **Rubric:** 4pts for correct `pop_parameters` tibble (autograder); 1pts for nicely formatted table (PDF). 
 
 ## Answer 3
+```{r}
+library(knitr)
+pop_parameters <- durham |>
+  summarize(
+    age_pop_mean = mean(age, na.rm = TRUE),
+    age_pop_sd = sd(age, na.r = TRUE),
+    turnout_pop_prop = mean(vote_gen_2020, na.rm = TRUE),
+    turnout_pop_sd = sd(vote_gen_2020, na.rm = TRUE)
+    )
+kable(pop_parameters, digits = 2, caption = "pop. parameters for age and turnout")
+```
 
 
 
