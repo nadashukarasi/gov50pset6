@@ -166,6 +166,23 @@ In the write-up, compare the sampling distribution of the sample mean and sample
 
 ## Answer 4
 
+```{r eval=FALSE}
+install.packages("infer")
+library(infer)
+set.seed(02138)
+samples_n200 <- durham |>
+  rep_slice_sample(n = 200, reps = 1000) |>
+  group_by(replicate) |>
+  summarize(age_mean = mean(age),
+            turnout_prop = mean(vote_gen_2020))
+age_mean_hist <- ggplot(samples_n200, mapping = aes(x = age_mean)) +
+  geom_histogram(aes(y = after_stat(density)), binwidth = 0.5)
+age_mean_hist
+turnout_prop_hist <- ggplot(samples_n200, mapping = aes(x = turnout_prop)) +
+  geom_histogram(aes(y = after_stat(density)), binwidth = 0.005)
+turnout_prop_hist
+```
+
 
 
 \newpage
@@ -189,6 +206,16 @@ Compare the mean and SD of these sampling distributions to the population means 
  **Rubric**: 4pts for correct `samp_dist_summary` tibble (autograder); 1pt for nicely formatted table (PDF); 2pts for discussion (PDF). 
 
 ## Answer 5
+```{r}
+library(purrr)
+samp_dist_summary <- samples_n200 |>
+  summarize(ev_age = mean(age_mean),
+            se_age = sd(age_mean),
+            ev_turnout = mean(turnout_prop), 
+            se_turnout = sd(turnout_prop)
+  )
+kable(samp_dist_summary, digits = 2)
+```
 
 
 
@@ -207,6 +234,23 @@ Does the sampling distribution of turnout in these samples appear biased or unbi
   **Rubric:** 2pts for correct `young_samples_n200` tibble (autograder); 1pt for correctly identifying biased/unbiased (PDF); 2pt explaining bias/unbiasedness (PDF). 
 
 ## Answer 6
+```{r}
+durham_under_30 <- durham |>
+  filter(age<30)
+set.seed(02138)
+young_samples_n200 <- replicate(1000, {
+  sample_n(durham_under_30, size = 200) |>
+    summarize(turnout = mean(vote_gen_2020))
+}, simplify = FALSE) |>
+  bind_rows() |>
+  rename(turnout_prop = turnout)
+true_avg_turnout <- mean(durham$vote_gen_2020)
+young_turnout_prop_hist <- ggplot(young_samples_n200, aes(x = turnout_prop)) +
+  geom_histogram(aes(y = after_stat(density)), binwidth = 0.01) +
+  geom_vline(aes(xintercept = true_avg_turnout), color = "pink", linetype = "dashed", linewidth = 2) +
+  labs(x = "turnout prop.", y = "density") + theme_minimal()
+young_turnout_prop_hist
+```
 
 
 
